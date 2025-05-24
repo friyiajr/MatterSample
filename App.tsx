@@ -33,6 +33,12 @@ interface BallCoords {
 
 type GameObjects = BoxCoords | BallCoords;
 
+const wallThickness = 10;
+
+const topWall = Matter.Bodies.rectangle(width / 2, 10, width * 2, 10, {
+  isStatic: true,
+});
+
 const groundCoords: BoxCoords = {
   x: makeMutable(0),
   y: makeMutable(height - 60),
@@ -42,6 +48,22 @@ const groundCoords: BoxCoords = {
   origin: makeMutable(vec(0, 0)),
   type: "box",
 };
+
+const bottomWall = Matter.Bodies.rectangle(
+  width / 2,
+  height - wallThickness / 2,
+  width,
+  wallThickness + 150,
+  { isStatic: true }
+);
+
+const leftWall = Matter.Bodies.rectangle(0, 0, 10, height * 2, {
+  isStatic: true,
+});
+
+const rightWall = Matter.Bodies.rectangle(width, 0, -10, height * 2, {
+  isStatic: true,
+});
 
 const ballCoords: BallCoords = {
   x: makeMutable(width * 0.12),
@@ -59,28 +81,6 @@ const ball = Matter.Bodies.circle(
     restitution: 0.9,
   }
 );
-
-const wallThickness = 10;
-
-const topWall = Matter.Bodies.rectangle(width / 2, 10, width * 2, 10, {
-  isStatic: true,
-});
-
-const bottomWall = Matter.Bodies.rectangle(
-  width / 2,
-  height - wallThickness / 2,
-  width,
-  wallThickness + 150,
-  { isStatic: true }
-);
-
-const leftWall = Matter.Bodies.rectangle(0, 0, 10, height * 2, {
-  isStatic: true,
-});
-
-const rightWall = Matter.Bodies.rectangle(width, 0, -10, height * 2, {
-  isStatic: true,
-});
 
 Matter.World.add(world, [bottomWall, topWall, leftWall, rightWall, ball]);
 
@@ -167,7 +167,7 @@ export default function App() {
       <Buttons
         onPress1={() => {
           const newBoxCoords: BoxCoords = {
-            x: makeMutable(width / 2 - 20),
+            x: makeMutable(width / 2 + 40),
             y: makeMutable(200),
             angle: makeMutable([{ rotateZ: 0 }]),
             width: BOX_SIZE,
@@ -178,7 +178,7 @@ export default function App() {
             type: "box",
           };
 
-          offsetVal.current = (offsetVal.current + 1) % 3;
+          offsetVal.current = (offsetVal.current + 1) % 2;
 
           const newBox = Matter.Bodies.rectangle(
             newBoxCoords.x.value + offsetVal.current * BOX_SIZE,
