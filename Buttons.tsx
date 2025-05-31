@@ -4,11 +4,11 @@ import { TouchableOpacity, Text, Dimensions } from "react-native";
 const { width } = Dimensions.get("window");
 
 export const Buttons = ({
-  onPress1,
-  onPress2,
+  onAddBox: onPress1,
+  onLaunch: onPress2,
 }: {
-  onPress1: () => void;
-  onPress2: () => void;
+  onAddBox: () => void;
+  onLaunch: () => void;
 }) => {
   return (
     <>
