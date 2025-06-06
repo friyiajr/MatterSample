@@ -13,6 +13,7 @@ const { height, width } = Dimensions.get("window");
 
 const BOX_SIZE = 50;
 const BALL_SIZE = 30;
+const BOTTOM_HEIGHT = 40;
 
 interface BoxCoords {
   x: SharedValue<number>;
@@ -33,41 +34,45 @@ interface BallCoords {
 
 type GameObjects = BoxCoords | BallCoords;
 
-const wallThickness = 10;
-
-const topWall = Matter.Bodies.rectangle(width / 2, 10, width * 2, 10, {
+const topWall = Matter.Bodies.rectangle(width / 2, 0, width, 1, {
   isStatic: true,
 });
 
+const bottomWall = Matter.Bodies.rectangle(
+  width / 2,
+  height - BOTTOM_HEIGHT,
+  width,
+  BOTTOM_HEIGHT,
+  { isStatic: true }
+);
+
+const leftWall = Matter.Bodies.rectangle(-BALL_SIZE, height / 2, 1, height, {
+  isStatic: true,
+});
+
+const rightWall = Matter.Bodies.rectangle(
+  width - BALL_SIZE,
+  height / 2,
+  1,
+  height * 2,
+  {
+    isStatic: true,
+  }
+);
+
 const groundCoords: BoxCoords = {
   x: makeMutable(0),
-  y: makeMutable(height - 60),
+  y: makeMutable(height - BOTTOM_HEIGHT),
   angle: makeMutable([{ rotateZ: 0 }]),
-  width: 810,
-  height: 60,
+  width: width,
+  height: BOTTOM_HEIGHT,
   origin: makeMutable(vec(0, 0)),
   type: "box",
 };
 
-const bottomWall = Matter.Bodies.rectangle(
-  width / 2,
-  height - wallThickness / 2,
-  width,
-  wallThickness + 150,
-  { isStatic: true }
-);
-
-const leftWall = Matter.Bodies.rectangle(0, 0, 10, height * 2, {
-  isStatic: true,
-});
-
-const rightWall = Matter.Bodies.rectangle(width, 0, -10, height * 2, {
-  isStatic: true,
-});
-
 const ballCoords: BallCoords = {
-  x: makeMutable(width * 0.12),
-  y: makeMutable(height * 0.85),
+  x: makeMutable(width * 0.15),
+  y: makeMutable(height * 0.83),
   radius: BALL_SIZE,
   type: "ball",
 };
@@ -86,8 +91,8 @@ Matter.World.add(world, [bottomWall, topWall, leftWall, rightWall, ball]);
 
 function launchBall() {
   Sleeping.set(ball, false);
-  Matter.Body.setAngularVelocity(ball, 8);
-  Matter.Body.setVelocity(ball, { x: 100, y: 0 });
+  Matter.Body.setAngularVelocity(ball, 5);
+  Matter.Body.setVelocity(ball, { x: 63, y: 0 });
 }
 
 export default function App() {
